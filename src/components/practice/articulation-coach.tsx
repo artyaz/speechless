@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
 import { Sparkles, Volume2, Waves } from "lucide-react";
 import { LoadingSpinner } from "~/components/shared/loading-spinner";
 import { PHONEME_TIPS } from "~/lib/pronunciation-tips-data";
@@ -47,23 +46,14 @@ export function ArticulationCoach({
   const activeError = modelError ?? userError;
 
   return (
-    <motion.div
-      layout
-      transition={{
-        layout: {
-          type: "spring",
-          stiffness: 145,
-          damping: 24,
-          mass: 0.95,
-        },
-      }}
+    <div
       className={cn(
-        "sticky top-0 z-10 rounded-xl border border-border bg-elevated/95 backdrop-blur transition-all",
+        "sticky top-0 z-10 rounded-xl border border-border bg-elevated/95 backdrop-blur",
+        "transition-[padding,background-color,border-color,box-shadow] duration-200 ease-out",
         isCollapsed ? "p-2.5" : "p-4",
       )}
     >
-      <motion.div
-        layout
+      <div
         className={cn(
           "gap-3",
           isCollapsed ? "flex items-center justify-between" : "space-y-3",
@@ -75,27 +65,29 @@ export function ArticulationCoach({
             Pronunciation coach
           </div>
 
-          <AnimatePresence initial={false} mode="wait">
-            {isCollapsed ? (
-              <motion.p
-                key="collapsed-copy"
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.24, ease: "easeOut" }}
-                className="truncate text-xs text-text-muted"
-              >
-                {word.word}
-              </motion.p>
-            ) : (
-              <motion.div
-                key="expanded-copy"
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="space-y-3"
-              >
+          <div className="space-y-3">
+            <p
+              className={cn(
+                "truncate text-xs text-text-muted transition-[opacity,transform,max-height,margin] duration-180 ease-out",
+                isCollapsed
+                  ? "max-h-6 translate-y-0 opacity-100"
+                  : "max-h-0 -translate-y-1 opacity-0",
+              )}
+              aria-hidden={!isCollapsed}
+            >
+              {word.word}
+            </p>
+
+            <div
+              className={cn(
+                "overflow-hidden transition-[max-height,opacity,transform,margin] duration-220 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                isCollapsed
+                  ? "pointer-events-none mt-0 max-h-0 -translate-y-1 opacity-0"
+                  : "mt-0 max-h-[26rem] translate-y-0 opacity-100",
+              )}
+              aria-hidden={isCollapsed}
+            >
+              <div className="space-y-3 pb-0.5">
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-base font-semibold text-text-primary">
@@ -152,9 +144,9 @@ export function ArticulationCoach({
                     </div>
                   )}
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div
@@ -213,7 +205,7 @@ export function ArticulationCoach({
             </button>
           )}
         </div>
-      </motion.div>
+      </div>
 
       {activeError && (
         <p
@@ -225,6 +217,6 @@ export function ArticulationCoach({
           {activeError}
         </p>
       )}
-    </motion.div>
+    </div>
   );
 }
