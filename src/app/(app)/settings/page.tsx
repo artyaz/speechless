@@ -30,12 +30,14 @@ const LANGUAGE_OPTIONS = [
   "French",
   "German",
   "Hindi",
+  "Italian",
   "Japanese",
   "Korean",
+  "Polish",
   "Portuguese",
-  "Russian",
   "Spanish",
   "Turkish",
+  "Ukrainian",
   "Vietnamese",
   "Other",
 ];
@@ -70,6 +72,10 @@ export default function SettingsPage() {
   const user = session?.user;
   const controlsDisabled =
     preferencesQuery.isLoading || updatePreferences.isPending;
+  const languageOptions =
+    language && !LANGUAGE_OPTIONS.includes(language)
+      ? [language, ...LANGUAGE_OPTIONS]
+      : LANGUAGE_OPTIONS;
 
   useEffect(() => {
     if (!preferencesQuery.data) {
@@ -250,7 +256,7 @@ export default function SettingsPage() {
                   )}
                 >
                   <option value="">Select language</option>
-                  {LANGUAGE_OPTIONS.map((lang) => (
+                  {languageOptions.map((lang) => (
                     <option key={lang} value={lang}>
                       {lang}
                     </option>
